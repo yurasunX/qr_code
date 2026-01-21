@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator - Генератор QR-кодов</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon-wrapper">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+            </div>
+            <h1>Генератор QR-кодов</h1>
+            <p class="subtitle">Создавайте QR-коды для URL, текста и контактной информации</p>
+        </div>
+
+        <div class="main-card">
+            <div class="tabs">
+                <button class="tab active" data-tab="url">
+                    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                    URL
+                </button>
+                <button class="tab" data-tab="text">
+                    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Текст
+                </button>
+                <button class="tab" data-tab="contact">
+                    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Контакт
+                </button>
+            </div>
+
+            <div class="content">
+                <div class="grid">
+                    <div class="input-section">
+                        <h2 id="section-title">Введите URL</h2>
+
+                        <!-- URL Form -->
+                        <div id="url-form" class="tab-content active">
+                            <div class="form-group">
+                                <label>URL сайта</label>
+                                <input type="url" id="url-input" placeholder="example.com или https://example.com">
+                                <p class="help-text">Введите URL сайта. Если не добавите http://, мы автоматически добавим https://</p>
+                            </div>
+                        </div>
+
+                        <!-- Text Form -->
+                        <div id="text-form" class="tab-content">
+                            <div class="form-group">
+                                <label>Текстовое содержание</label>
+                                <textarea id="text-input" rows="4" placeholder="Введите любой текст для генерации QR-кода..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Contact Form -->
+                        <div id="contact-form" class="tab-content">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Имя</label>
+                                    <input type="text" id="first-name" placeholder="Иван">
+                                </div>
+                                <div class="form-group">
+                                    <label>Фамилия</label>
+                                    <input type="text" id="last-name" placeholder="Иванов">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Номер телефона</label>
+                                <input type="tel" id="phone" placeholder="+7 (999) 123-4567">
+                            </div>
+                            <div class="form-group">
+                                <label>Email адрес</label>
+                                <input type="email" id="email" placeholder="ivan.ivanov@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Организация</label>
+                                <input type="text" id="organization" placeholder="Название компании">
+                            </div>
+                            <div class="form-group">
+                                <label>Веб-сайт</label>
+                                <input type="url" id="website" placeholder="https://example.com">
+                            </div>
+                        </div>
+
+                        <button class="btn-clear" onclick="clearForm()">Очистить все поля</button>
+                    </div>
+
+                    <div class="qr-section">
+                        <h2>Сгенерированный QR-код</h2>
+                        <div class="qr-container">
+                            <div id="qr-code" class="qr-placeholder">
+                                <svg class="qr-icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                                <p>Заполните форму для генерации QR-кода</p>
+                            </div>
+                        </div>
+
+                        <div id="action-buttons" class="action-buttons hidden">
+                            <button class="btn-primary" onclick="downloadQR()">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Скачать
+                            </button>
+                            <button class="btn-secondary" onclick="copyData()">
+                                <svg class="btn-icon" id="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                <span id="copy-text">Копировать данные</span>
+                            </button>
+                        </div>
+
+                        <div id="qr-data-section" class="qr-data hidden">
+                            <h3>Данные QR-кода:</h3>
+                            <div class="data-display">
+                                <pre id="qr-data-text"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Генерируйте QR-коды мгновенно • Данные не сохраняются • Бесплатно</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
